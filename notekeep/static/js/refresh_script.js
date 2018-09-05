@@ -13,8 +13,9 @@ function refresh_notes() {
                 // Replace current notes container with new one
                 $('#notes_container').replaceWith(notes)
             },
-            error: function() {
-                addWarningMessage("Something went wrong refreshing your notes. Try again later.")
+            error: function(error) {
+                const reason = error.responseJSON.reason;
+                addWarningMessage(reason)
             },
             complete: function () {
                 $('#refresh_button').removeClass("is-loading");

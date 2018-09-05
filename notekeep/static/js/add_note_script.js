@@ -4,14 +4,45 @@ function add_new_note() {
         {
             url: "/api/notes/add",
             success: function (noteModal) {
-                // Replace current notes container with new one
+                removeCurrentModal();
                 $('body').append(noteModal)
             },
-            error: function () {
-                addWarningMessage("Something went wrong when creating a new note. Try again later")
+            error: function (error) {
+                const reason = error.responseJSON.reason;
+                addWarningMessage(reason)
             },
             complete: function () {
                 $('#new_note_button').removeClass("is-loading");
+            }
+        }
+    )
+}
+
+function deleteNote(note_id) {
+    $('#delete_note_button').addClass("is-loading");
+    $('#save_note_button').attr("disabled", true);
+    $('#cancel_note_button').attr("disabled", true);
+
+    // Tries to delete a note
+    $.ajax(
+        {
+            type: 'DELETE',
+            url: "/api/notes/delete/" + note_id,
+            beforeSend: function(xhr, settings) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken)
+            },
+            success: function (data) {
+                removeCurrentModal()
+            },
+            error: function (error) {
+                const reason = error.responseJSON.reason;
+                addWarningInModal(reason);
+                $('#delete_note_button').removeClass("is-loading");
+                $('#save_note_button').attr("disabled", false);
+                $('#cancel_note_button').attr("disabled", false);
+            },
+            complete: function () {
+
             }
         }
     )
@@ -28,7 +59,8 @@ function createOrUpdateNote(note_id) {
     const bodyText = bodyInput.val();
 
     $('#save_note_button').addClass("is-loading");
-    $('#cancel_note_button').addClass("is-disabled");
+    $('#cancel_note_button').attr("disabled", true);
+    $('#delete_note_button').attr("disabled", true);
 
     // Updates the note in the backend, after success, removes the modal
     // after error, shows error in modal
@@ -47,10 +79,13 @@ function createOrUpdateNote(note_id) {
             success: function (data) {
                 removeCurrentModal()
             },
-            error: function (data) {
-                addWarningInModal(data['reason']);
+            error: function (error) {
+                const reason = error.responseJSON.reason;
+                addWarningInModal(reason);
                 $('#save_note_button').removeClass("is-loading");
-                $('#cancel_note_button').removeClass("is-disabled");
+                $('#cancel_note_button').attr("disabled", false);
+                $('#delete_note_button').attr("disabled", false);
+
             },
             complete: function () {
 

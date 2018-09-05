@@ -3,10 +3,12 @@ function open_note(note_id) {
         {
             url: "/api/notes/open/" + note_id,
             success: function(noteModal) {
+                removeCurrentModal();
                 $('body').append(noteModal)
             },
-            error: function() {
-                addWarningMessage("Something went wrong when opening the note. Try again later")
+            error: function(error) {
+                const reason = error.responseJSON.reason;
+                addWarningMessage(reason)
             },
             complete: function () {
             }

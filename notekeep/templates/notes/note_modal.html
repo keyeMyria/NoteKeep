@@ -19,15 +19,27 @@
                 <div id="note_modal_information" class="margin-bottom-16"></div>
 
                 <form id="note_form">
-                     <input id="input_title" name="title" class="input margin-bottom-16" type="text" placeholder="Title" value="{{ note.title }}">
-                     <textarea id="input_body" name="body" class="textarea margin-bottom-16" placeholder="Description">{{ note.body }}</textarea>
+                    <input id="input_title" name="title" class="input margin-bottom-16" type="text" placeholder="Title"
+                           value="{{ note.title }}">
+                    <textarea id="input_body" name="body" class="textarea margin-bottom-16"
+                              placeholder="Description">{{ note.body }}</textarea>
                 </form>
 
             </section>
             <footer class="modal-card-foot">
-                <button id="save_note_button" class="button is-success" onclick="createOrUpdateNote({{ note.id }})">Save note</button>
+                <button id="save_note_button" class="button is-success" onclick="createOrUpdateNote({{ note.id }})">Save
+                    note
+                </button>
                 <button id="cancel_note_button" class="button" onclick="removeCurrentModal()">Cancel</button>
+
+                <a id="delete_note_button" class="button is-danger to-modal-card-right" onclick="deleteNote({{ note.id }})">
+                    <span class="icon">
+                        <i class="fas fa-trash-alt"></i>
+                    </span>
+                    <span>Delete</span>
+                </a>
             </footer>
+
         </div>
     </div>
 

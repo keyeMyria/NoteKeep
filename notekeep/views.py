@@ -14,6 +14,8 @@ from notekeep.forms.RegisterForm import RegisterForm
 from notekeep.models import Note
 from notekeep.serializers import NotesSerializer
 
+SLEEP_TIME = 0
+
 
 def register_view(request):
     """
@@ -64,9 +66,9 @@ def logout_view(request):
 
 @login_required
 def notes_view(request, tag=0):
-    notes_query = Note.objects.filter(user=request.user).order_by("created_at").all()
+    notes_query = Note.objects.filter(user=request.user).order_by("-created_at").all()
     notes = NotesSerializer(notes_query, many=True)
-    # sleep(5) # For test slow connections
+    sleep(SLEEP_TIME)  # For test slow connections
     return render(request, "notes.html", {"notes": notes.data})
 
 
@@ -81,6 +83,7 @@ def add_note_view(request):
     """
 
     print("Creating empty modal")
+    sleep(SLEEP_TIME)  # For test slow connections
 
     if not request.user.is_authenticated:
         return HttpResponseBadRequest()
@@ -96,6 +99,7 @@ def open_note_view(request, note_id):
     """
 
     print("Building note modal for id: ", note_id)
+    sleep(SLEEP_TIME)  # For test slow connections
 
     if request.user.is_authenticated:
         note = Note.objects.filter(user=request.user, id=note_id).first()
@@ -111,9 +115,23 @@ def create_or_update_note_view(request):
     title = request.POST.get("title")
     body = request.POST.get("body")
     note_id = request.POST.get("id")
+    sleep(SLEEP_TIME)  # For test slow connections
+
+    if len(title.strip()) == 0 or len(body.strip()) == 0:
+        return Response(data={"reason": "The note is empty!"}, status=status.HTTP_403_FORBIDDEN)
 
     if request.user.is_authenticated:
         Note.objects.update_or_create(id=note_id, defaults={"user": request.user, "title": title, "body": body})
         return Response(status=status.HTTP_200_OK)
     else:
-        return Response(data={"reason":"Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
+        return Response(data={"reason": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(['DELETE'])
+def delete_note_view(request, note_id):
+    sleep(SLEEP_TIME)
+    if request.user.is_authenticated:
+        Note.objects.filter(id=note_id, user=request.user).delete()
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(data={"reason": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)

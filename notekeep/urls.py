@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/notes/', views.notes_view),
     path('api/notes/add/', views.add_note_view),
     path('api/notes/open/<note_id>/', views.open_note_view),
+    path('api/notes/delete/<note_id>/', views.delete_note_view),
     path('api/notes/update', views.create_or_update_note_view),
     path('accounts/register/', views.register_view),
     path('accounts/login/', views.login_view),
