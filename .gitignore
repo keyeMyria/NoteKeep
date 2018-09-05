@@ -1,0 +1,4 @@
+.idea/
+venv/Lib/site-packages/django/conf/locale/hu/__pycache__/formats.cpython-37.pyc
+venv/
+project/__pycache__/

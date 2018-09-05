@@ -1,0 +1,71 @@
+{% block content %}
+
+    <nav class="navbar is-primary card margin-bottom-16">
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="">
+                    <p class="has-text-weight-bold">Notes</p>
+                </a>
+
+                <div class="navbar-item field is-grouped">
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="Find notes">
+                    </p>
+                    <p class="control">
+                        <a class="button is-warning">
+                            Search
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="field is-grouped">
+
+                        <p class="control">
+                            <a class="button is-warning">
+                            <span class="icon">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                                <span>
+                                New note
+                            </span>
+                            </a>
+                        </p>
+
+                        <p class="control">
+                            <a class="button is-info">
+                            <span class="icon">
+                                <i class="fas fa-sync"></i>
+                            </span>
+                                <span>
+                                Refresh
+                            </span>
+                            </a>
+                        </p>
+
+                        <div class="dropdown is-hoverable margin-left-16 is-right">
+                            <div class="dropdown-trigger">
+                                <a class="button" aria-haspopup="true" aria-controls="dropdown-menu4"
+                                   href="/accounts/edit">
+                                    <span>Account</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                </a>
+                            </div>
+
+                            <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item">
+                                        <p>{{ user.username }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </nav>
+
+{% endblock content %}

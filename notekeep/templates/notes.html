@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+
+    {% include "notes/navigation.html" %}
+
+    <div class="columns">
+        <div class="column"></div>
+        <div class="container column is-one-third">
+            {% for note in notes %}
+                {% include "notes/note_row.html" with note=note %}
+            {% endfor %}
+        </div>
+        <div class="column"></div>
+    </div>
+
+{% endblock %}
+
