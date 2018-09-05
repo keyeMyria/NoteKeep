@@ -24,7 +24,7 @@
                     <div class="field is-grouped">
 
                         <p class="control">
-                            <a class="button is-warning">
+                            <a id="new_note_button" class="button is-warning" onclick="add_new_note()">
                             <span class="icon">
                                 <i class="fas fa-plus"></i>
                             </span>
@@ -35,7 +35,7 @@
                         </p>
 
                         <p class="control">
-                            <a class="button is-info">
+                            <a id=refresh_button class="button is-info" onclick="refresh_notes()">
                             <span class="icon">
                                 <i class="fas fa-sync"></i>
                             </span>
@@ -47,20 +47,45 @@
 
                         <div class="dropdown is-hoverable margin-left-16 is-right">
                             <div class="dropdown-trigger">
+
+                                <!--suppress HtmlUnknownTarget -->
                                 <a class="button" aria-haspopup="true" aria-controls="dropdown-menu4"
                                    href="/accounts/edit">
-                                    <span>Account</span>
                                     <span class="icon is-small">
                                         <i class="fas fa-user"></i>
                                     </span>
+                                    <span>Account</span>
                                 </a>
                             </div>
 
                             <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                                 <div class="dropdown-content">
+
                                     <div class="dropdown-item">
                                         <p>{{ user.username }}</p>
                                     </div>
+
+                                    <hr class="dropdown-divider">
+
+                                    <!--suppress HtmlUnknownTarget -->
+                                    <a class="dropdown-item" href="/accounts/edit">
+                                        <span class="icon is-small">
+                                            <i class="far fa-edit"></i>
+                                        </span>
+                                        <span>
+                                            Edit account
+                                        </span>
+                                    </a>
+
+                                    <!--suppress HtmlUnknownTarget -->
+                                    <a class="dropdown-item" href="/accounts/logout">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-user" style="color: red;"></i>
+                                        </span>
+                                        <span style="color: red">
+                                            Logout
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
                         </div>

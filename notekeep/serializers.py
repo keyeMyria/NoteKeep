@@ -6,7 +6,7 @@ from notekeep.models import Note
 class NotesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = 'title', 'body'
+        fields = 'title', 'body', 'id'
 
 
 

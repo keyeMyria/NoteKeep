@@ -6,9 +6,19 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 
+    {% load static %}
+    <script src="{% static 'js/refresh_script.js' %}"></script>
+    <script src="{% static 'js/add_note_script.js' %}"></script>
+    <script src="{% static 'js/notifications_script.js' %}"></script>
+    <script src="{% static 'js/open_note_script.js' %}"></script>
+
     {% include "notes/navigation.html" %}
 
-    <div class="columns">
+    <div id="information_container" class="container margin-bottom-16">
+
+    </div>
+
+    <div id="notes_container" class="columns">
         <div class="column"></div>
         <div class="container column is-one-third">
             {% for note in notes %}

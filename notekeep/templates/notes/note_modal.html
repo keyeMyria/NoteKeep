@@ -1,0 +1,34 @@
+{% block content %}
+
+    <div id="current_modal" class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+
+            {% if note %}
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Update note</p>
+                </header>
+            {% else %}
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Add new note</p>
+                </header>
+            {% endif %}
+
+            <section class="modal-card-body is-grouped">
+
+                <div id="note_modal_information" class="margin-bottom-16"></div>
+
+                <form id="note_form">
+                     <input id="input_title" name="title" class="input margin-bottom-16" type="text" placeholder="Title" value="{{ note.title }}">
+                     <textarea id="input_body" name="body" class="textarea margin-bottom-16" placeholder="Description">{{ note.body }}</textarea>
+                </form>
+
+            </section>
+            <footer class="modal-card-foot">
+                <button id="save_note_button" class="button is-success" onclick="createOrUpdateNote({{ note.id }})">Save note</button>
+                <button id="cancel_note_button" class="button" onclick="removeCurrentModal()">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
+{% endblock content %}
