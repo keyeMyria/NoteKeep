@@ -77,6 +77,7 @@ def account_edit_view(request):
     return render(request, "registration/account_edit.html")
 
 
+@api_view(['GET'])
 def add_note_view(request):
     """
     If the user is not authenticated, raises an error, else, shows an empty add note modal
@@ -86,11 +87,12 @@ def add_note_view(request):
     sleep(SLEEP_TIME)  # For test slow connections
 
     if not request.user.is_authenticated:
-        return HttpResponseBadRequest()
+        return Response(data={"reason": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
     else:
         return render(request, "notes/note_modal.html")
 
 
+@api_view(['GET'])
 def open_note_view(request, note_id):
     """
     Gets the note with a given note id if exists and builds a modal then
@@ -98,13 +100,14 @@ def open_note_view(request, note_id):
     If the user is not authenticated, raises an error
     """
 
-    print("Building note modal for id: ", note_id)
     sleep(SLEEP_TIME)  # For test slow connections
 
     if request.user.is_authenticated:
         note = Note.objects.filter(user=request.user, id=note_id).first()
+        if note is None:
+            return Response(data={"reason": "Note unavailable"}, status=status.HTTP_403_FORBIDDEN)
     else:
-        return HttpResponseBadRequest()
+        return Response(data={"reason": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
 
     return render(request, "notes/note_modal.html", {"note": note})
 
@@ -117,7 +120,7 @@ def create_or_update_note_view(request):
     note_id = request.POST.get("id")
     sleep(SLEEP_TIME)  # For test slow connections
 
-    if len(title.strip()) == 0 or len(body.strip()) == 0:
+    if len(title.strip()) == 0 and len(body.strip()) == 0:
         return Response(data={"reason": "The note is empty!"}, status=status.HTTP_403_FORBIDDEN)
 
     if request.user.is_authenticated:
