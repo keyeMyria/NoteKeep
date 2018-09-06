@@ -32,7 +32,8 @@ function deleteNote(note_id) {
               xhr.setRequestHeader("X-CSRFToken", csrftoken)
             },
             success: function (data) {
-                removeCurrentModal()
+                removeCurrentModal();
+                refresh_notes();
             },
             error: function (error) {
                 const reason = error.responseJSON.reason;
@@ -77,7 +78,8 @@ function createOrUpdateNote(note_id) {
                 id: note_id
             },
             success: function (data) {
-                removeCurrentModal()
+                removeCurrentModal();
+                refresh_notes();
             },
             error: function (error) {
                 const reason = error.responseJSON.reason;
