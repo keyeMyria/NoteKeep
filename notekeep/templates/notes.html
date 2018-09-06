@@ -18,15 +18,36 @@
 
     </div>
 
-    <div id="notes_container" class="columns">
-        <div class="column"></div>
-        <div class="container column is-one-third">
+    <div id="notes_container" class="columns margins-16">
+
+        <div class="column">
+            <div id="tags_box" class="box">
+
+                <h4 class="title is-4">Filters</h4>
+                <hr>
+
+                <aside class="menu">
+                    <p class="menu-label">
+                        Tags
+                    </p>
+                    <ul class="menu-list">
+                        {% for tag in tags %}
+                            {% include "notes/tag_row_filter.html" with tag=tag %}
+                        {% endfor %}
+                    </ul>
+                </aside>
+            </div>
+        </div>
+
+        <div class="column is-two-thirds">
             {% for note in notes %}
                 {% include "notes/note_row.html" with note=note %}
             {% endfor %}
         </div>
-        <div class="column"></div>
     </div>
 
-{% endblock %}
+    <script>
+        openRefreshSocket()
+    </script>
 
+{% endblock %}

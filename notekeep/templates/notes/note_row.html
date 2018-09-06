@@ -7,6 +7,12 @@
             <p class="subtitle">
                 {{ note.body }}
             </p>
+
+            <div class="tags">
+                {% for tag in note.tags %}
+                    {% include 'notes/tag_row.html' with tag=tag %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock content %}

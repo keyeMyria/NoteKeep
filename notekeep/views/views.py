@@ -1,5 +1,6 @@
 from time import sleep
 
+from asgiref.sync import async_to_sync
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -11,8 +12,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from notekeep.forms.RegisterForm import RegisterForm
-from notekeep.models import Note
-from notekeep.serializers import NotesSerializer
+from notekeep.models import Note, Tag
+from notekeep.serializers import NotesSerializer, TagsSerializer
 
 SLEEP_TIME = 0
 
@@ -67,9 +68,13 @@ def logout_view(request):
 @login_required
 def notes_view(request, tag=0):
     notes_query = Note.objects.filter(user=request.user).order_by("-created_at").all()
+    tags_query = Tag.objects.filter(user=request.user).order_by("name").all()
+
     notes = NotesSerializer(notes_query, many=True)
+    tags = TagsSerializer(tags_query, many=True)
+
     sleep(SLEEP_TIME)  # For test slow connections
-    return render(request, "notes.html", {"notes": notes.data})
+    return render(request, "notes.html", {"notes": notes.data, "tags": tags.data})
 
 
 @login_required
@@ -103,13 +108,14 @@ def open_note_view(request, note_id):
     sleep(SLEEP_TIME)  # For test slow connections
 
     if request.user.is_authenticated:
-        note = Note.objects.filter(user=request.user, id=note_id).first()
+        notes_query = Note.objects.filter(user=request.user, id=note_id).first()
+        note = NotesSerializer(notes_query, many=False)
         if note is None:
             return Response(data={"reason": "Note unavailable"}, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(data={"reason": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
 
-    return render(request, "notes/note_modal.html", {"note": note})
+    return render(request, "notes/note_modal.html", {"note": note.data})
 
 
 @csrf_exempt
@@ -125,6 +131,7 @@ def create_or_update_note_view(request):
 
     if request.user.is_authenticated:
         Note.objects.update_or_create(id=note_id, defaults={"user": request.user, "title": title, "body": body})
+        fire_refresh_broadcast(request.user)
         return Response(status=status.HTTP_200_OK)
     else:
         return Response(data={"reason": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
@@ -135,6 +142,20 @@ def delete_note_view(request, note_id):
     sleep(SLEEP_TIME)
     if request.user.is_authenticated:
         Note.objects.filter(id=note_id, user=request.user).delete()
+        fire_refresh_broadcast(request.user)
         return Response(status=status.HTTP_200_OK)
     else:
         return Response(data={"reason": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
+
+
+def fire_refresh_broadcast(user):
+    """
+    Fires an event that will refresh all the notes in current connected
+    sockets.
+    """
+    from channels.layers import get_channel_layer
+
+    layer = get_channel_layer()
+    async_to_sync(layer.group_send)(user.username, {
+        'type': 'events.refresh'
+    })

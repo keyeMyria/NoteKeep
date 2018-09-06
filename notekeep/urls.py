@@ -1,6 +1,7 @@
-from django.contrib.auth.decorators import login_required
 from django.urls import path
-from . import views
+
+from notekeep.views import views
+from notekeep.views.test_views import NotesTestView, TagsTestView
 
 urlpatterns = [
     path('', views.notes_view),
@@ -13,5 +14,7 @@ urlpatterns = [
     path('accounts/register/', views.register_view),
     path('accounts/login/', views.login_view),
     path('accounts/logout/', views.logout_view),
-    path('accounts/edit/', views.account_edit_view)
+    path('accounts/edit/', views.account_edit_view),
+    path('api/test/notes', NotesTestView.as_view()),
+    path('api/test/tags', TagsTestView.as_view())
 ]
