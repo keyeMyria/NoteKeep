@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'notekeep',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,7 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
+ASGI_APPLICATION = "notekeep.routing.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
